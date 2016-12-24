@@ -15,7 +15,7 @@ import java.awt.*;
 import java.awt.event.*;
 
 public class Breakout extends GraphicsProgram {
-	
+
 	/** Width and height of application window in pixels */
 	public static final int APPLICATION_WIDTH = 400;
 	public static final int APPLICATION_HEIGHT = 600;
@@ -54,6 +54,7 @@ public class Breakout extends GraphicsProgram {
 	
 	/** Number of turns */
 	private static final int NTURNS = 3;
+	private static int CHANCES=NTURNS;
 	
 	/**Ball velocity*/
 	private double vx,vy;
@@ -63,10 +64,16 @@ public class Breakout extends GraphicsProgram {
 	
 	/** Animation delay or pause time between ball moves */	
 	private static final int DELAY=10;
-	
+
+	//to export as a jar file.
+	public static void main(String[] args){
+		new Breakout().start(args);
+	}
+		
 	/* Method: run() */
 	/** Runs the Breakout program. */
 	public void run() {
+		printInstructions();
 		for(int i=0;i<NTURNS;i++){
 			//keeps track the number of times the ball hits the paddle.
 			counter=0;
@@ -79,6 +86,9 @@ public class Breakout extends GraphicsProgram {
 			//displays the number of bricks left.
 			bricks=new GLabel("Bricks Left: "+brickCounter);
 			add(bricks,25,getHeight()-5);
+			
+			turns=new GLabel("Lives: "+CHANCES);
+			add(turns,getWidth()-50,getHeight()-5);
 			setupGame();
 			playGame();	
 			if(brickCounter==0){
@@ -86,6 +96,7 @@ public class Breakout extends GraphicsProgram {
 				printWinner();
 				break;
 			}
+			
 			//Removes all the bricks if the ball hits the lower wall so that 
 			//if the player has any chances left then the new bricks created are 
 			//not superimposed on the previous ones. Instead previous ones are 
@@ -100,9 +111,55 @@ public class Breakout extends GraphicsProgram {
 			printGameOver();
 		}
 	}
+	private void printInstructions(){
+		instructions=new GLabel("INSTRUCTIONS -");
+		instructions.setFont("Default-20");
+		add(instructions,getWidth()/2-instructions.getWidth()/2,50);
+		
+		line1=new GLabel("1.Player has to eliminate all the bricks by bouncing the ball");
+		line1.setFont("Default-15");
+		add(line1,10,100+instructions.getAscent());
+		
+		line2=new GLabel("   off the paddle.");
+		line2.setFont("Default-15");
+		add(line2,10,line1.getY()+line2.getAscent());
+		
+		line3=new GLabel("2.The velocity of the ball will keep on increasing as the");
+		line3.setFont("Default-15");
+		add(line3,10,line2.getY()+line3.getAscent()+10);
+		
+		line4=new GLabel("   game progresses.");
+		line4.setFont("Default-15");
+		add(line4,10,line3.getY()+line4.getAscent());
+
+		line5=new GLabel("3.The bricks at higher level will give you more points than ");
+		line5.setFont("Default-15");
+		add(line5,10,line4.getY()+line5.getAscent()+10);
+		
+		line6=new GLabel("   the bricks at the lower level.");
+		line6.setFont("Default-15");
+		add(line6,10,line5.getY()+line6.getAscent());
+		
+		line7=new GLabel("4.You will be given 3 chances to break all the bricks.");
+		line7.setFont("Default-15");
+		add(line7,10,line6.getY()+line7.getAscent()+10);
+		
+		line8=new GLabel("Click anywhere to continue.");
+		line8.setFont("Default-16");
+		add(line8,10,line7.getY()+line8.getAscent()+10);
+		
+		//waits for user to click to start the game.
+		waitForClick();
+		removeAll();
+	}
 	
 	//GLabel object counter for displaying remaining bricks.
 	private GLabel bricks;
+	//GLabel object for displaying number of turns left with the player
+	private GLabel turns;
+	//GLabel object for displaying instructions at the start of the game
+	private GLabel instructions;
+	private GLabel line1,line2,line3,line4,line5,line6,line7,line8;
 	
 	//drawing and setting up game objects.
 	private void setupGame(){
@@ -226,6 +283,8 @@ public class Breakout extends GraphicsProgram {
 			moveBall();
 			
 			if(ball.getY()>=getHeight()){
+				CHANCES--;
+				turns.setLabel("Lives: "+CHANCES);
 				break;
 			}
 			if(brickCounter==0){
@@ -289,7 +348,7 @@ public class Breakout extends GraphicsProgram {
 		//since we lay down a row of bricks, the last brick in the brick wall is assigned the value brick.
 		//so we narrow it down by saying that the collier does not equal to a paddle or null or
 		//the "Bricks Left: " label, so all that is left is the brick
-		else if(collider!=null && collider!=bricks && collider!=currentScore){
+		else if(collider!=null && collider!=bricks && collider!=currentScore && collider!=turns){
 			//plays the audio clip.
 			bounceClip.play();
 			
