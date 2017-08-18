@@ -6,7 +6,7 @@ This game can be played by executing the provided java file. You will need to ad
 
 -----------------------------------------------------------------------------------------------------------------------------------------
 
-NOTE: The game response is machine dependent. The ball velocity is made to increase as the game progresses but the speed response might not go well.
+NOTE: The game response is machine dependent. The ball velocity is made to increase as the game progresses but the response might not go well.
 
 Author-
 Sajal Agrawal (sajal.agrawal1997@gmail.com)
